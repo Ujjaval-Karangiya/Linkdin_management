@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkPilot - LinkedIn Management</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>LinkPilot</h1>
+          <span class="badge">PRO</span>
+        </div>
+      </div>
+      <button id="btn-open-full-dashboard" class="icon-btn" title="Open Full Dashboard">
+        ↗
+      </button>
+    </header>
+
+    <!-- Daily Request Progress & Anti-Ban Monitor -->
+    <section class="metric-card main-progress">
+      <div class="card-header">
+        <span class="card-title">Daily Connection Requests</span>
+        <span id="safety-tag" class="safety-tag safe">Safe Mode</span>
+      </div>
+      
+      <div class="progress-display">
+        <div class="progress-stat">
+          <span id="sent-count" class="large-number">0</span>
+          <span id="limit-label" class="sub-label">/ 25 limit today</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-label">Accepted Today</span>
+          <span id="accepted-count" class="stat-val highlight-green">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Messages Today</span>
+          <span id="messages-count" class="stat-val highlight-blue">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- High-Value Leads & Follow-ups Quick Row -->
+    <div class="quick-cards-grid">
+      <div class="mini-card" id="card-high-value">
+        <div class="mini-card-icon">⭐</div>
+        <div class="mini-card-info">
+          <span id="high-value-count" class="mini-card-val">0</span>
+          <span class="mini-card-label">Phone & Portfolio Leads</span>
+        </div>
+      </div>
+      
+      <div class="mini-card" id="card-followups">
+        <div class="mini-card-icon">⏱️</div>
+        <div class="mini-card-info">
+          <span id="followup-count" class="mini-card-val">0</span>
+          <span class="mini-card-label">Follow-ups Due (1-2d)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Tab Action -->
+    <div class="active-tab-box" id="active-tab-box">
+      <div class="tab-box-header">
+        <span class="tab-box-status" id="tab-status-icon">●</span>
+        <span id="tab-status-text">Checking LinkedIn Tab...</span>
+      </div>
+      <button id="btn-quick-extract" class="action-btn primary" disabled>
+        📥 Extract Current Profile to CRM
+      </button>
+    </div>
+
+    <!-- Footer Actions -->
+    <footer class="footer">
+      <button id="btn-view-crm" class="action-btn secondary">
+        📊 Open Full CRM Dashboard
+      </button>
+    </footer>
+  </div>
+
+  <script src="../lib/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

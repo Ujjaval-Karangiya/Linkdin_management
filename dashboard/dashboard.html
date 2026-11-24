@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkPilot - LinkedIn Lead Management & Automation Suite</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">⚡</div>
+        <div class="brand-title">
+          <h2>LinkPilot</h2>
+          <span>LEAD & OUTREACH CRM</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="overview">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Daily Analytics</span>
+        </button>
+        <button class="nav-item" data-tab="high-value">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-label">Phone & Portfolio Leads</span>
+          <span class="nav-counter" id="badge-high-value-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="all-leads">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">All Contacts CRM</span>
+          <span class="nav-counter neutral" id="badge-total-leads">0</span>
+        </button>
+        <button class="nav-item" data-tab="followups">
+          <span class="nav-icon">⏱️</span>
+          <span class="nav-label">Follow-up Sequences</span>
+          <span class="nav-counter alert" id="badge-due-followups">0</span>
+        </button>
+        <button class="nav-item" data-tab="ai-studio">
+          <span class="nav-icon">🧠</span>
+          <span class="nav-label">AI Profile & Chat Review</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings & Anti-Ban</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer Status -->
+      <div class="sidebar-footer">
+        <div class="account-safety-card">
+          <div class="safety-header">
+            <span class="safety-indicator-dot safe" id="sidebar-safety-dot"></span>
+            <span class="safety-text" id="sidebar-safety-text">Safe Mode Active</span>
+          </div>
+          <div class="safety-bar-wrap">
+            <div class="safety-bar-fill" id="sidebar-safety-bar" style="width: 0%;"></div>
+          </div>
+          <span class="safety-count" id="sidebar-safety-count">0 / 25 requests today</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-title-wrap">
+          <h1 id="page-title">Daily Analytics & Overview</h1>
+          <p id="page-subtitle">Real-time connection request tracking, accepted metrics, and safety caps.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline" id="btn-seed-sample-data" title="Populate realistic sample leads for testing">
+            🎲 Load Sample Data
+          </button>
+          <button class="btn btn-primary" id="btn-add-lead-modal">
+            ➕ Add Lead Manually
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: OVERVIEW & DAILY ANALYTICS -->
+      <section class="tab-pane active" id="pane-overview">
+        <!-- Top Stats Row -->
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-top">
+              <span class="metric-title">Requests Sent Today</span>
+              <span class="metric-icon">🚀</span>
+            </div>
+            <div class="metric-value" id="stat-requests-today">0</div>
+            <div class="metric-sub" id="stat-requests-sub">Max safe limit: 25/day</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-top">
+              <span class="metric-title">Accepted Today</span>
+              <span class="metric-icon">🤝</span>
+            </div>
+            <div class="metric-value highlight-emerald" id="stat-accepted-today">0</div>
+            <div class="metric-sub">New connections verified</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-top">
+              <span class="metric-title">Phone & Portfolio Leads</span>
+              <span class="metric-icon">⭐</span>
+            </div>
+            <div class="metric-value highlight-amber" id="stat-high-value-total">0</div>
+            <div class="metric-sub">Separated high-intent contacts</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-top">
+              <span class="metric-title">Follow-ups Due (1-2d)</span>
+              <span class="metric-icon">⏱️</span>
+            </div>
+            <div class="metric-value highlight-rose" id="stat-followups-due">0</div>
+            <div class="metric-sub">Awaiting your response</div>
+          </div>
+        </div>
+
+        <!-- Progress Gauge & Anti-Ban Card -->
+        <div class="dashboard-card" style="margin-top: 20px;">
+          <div class="card-headline">
+            <div>
+              <h3>Daily Request Safety Engine</h3>
+              <p>Protects your LinkedIn account by enforcing recommended daily outreach velocity.</p>
+            </div>
+            <span class="status-pill status-pill-safe" id="overview-safety-badge">Safe Zone (< 80%)</span>
+          </div>
+
+          <div class="progress-details-row">
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill-lg" id="overview-progress-bar" style="width: 0%;"></div>
+            </div>
+            <div class="progress-info-text">
+              <strong id="overview-progress-text">0 of 25 sent</strong> (<span id="overview-progress-pct">0%</span> of daily quota)
+            </div>
+          </div>
+
+          <div class="guidance-grid">
+            <div class="guidance-item">
+              <span class="guidance-dot green"></span>
+              <div>
+                <strong>Safe Zone (0 - 20)</strong>
+                <p>Natural human browsing activity.</p>
+              </div>
+            </div>
+            <div class="guidance-item">
+              <span class="guidance-dot yellow"></span>
+              <div>
+                <strong>Caution Zone (21 - 30)</strong>
+                <p>Approaching weekly LinkedIn soft limitations.</p>
+              </div>
+            </div>
+            <div class="guidance-item">
+              <span class="guidance-dot red"></span>
+              <div>
+                <strong>Danger Zone (35+)</strong>
+                <p>Risk of temporary connection block or captcha.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="dashboard-card" style="margin-top: 20px;">
+          <div class="card-headline">
+            <div>
+              <h3>Real-Time Outreach Activity Log</h3>
+              <p>Live stream of connection requests, acceptances, and extracted profiles.</p>
+            </div>
+            <button class="btn btn-sm btn-outline" id="btn-refresh-logs">↻ Refresh</button>
+          </div>
+          <div class="activity-feed" id="activity-feed-list">
+            <div class="empty-state">No recorded activity yet. Use the LinkedIn extension to send requests and capture leads.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: HIGH-VALUE LEADS (PHONE & PORTFOLIO) -->
+      <section class="tab-pane" id="pane-high-value">
+        <div class="filter-header">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="high-value-search" placeholder="Search by name, company, email, phone...">
+          </div>
+          <div class="actions-cluster">
+            <button class="btn btn-emerald" id="btn-export-high-value-csv">
+              📥 Export High-Value CSV (Phone & Portfolio)
+            </button>
+          </div>
+        </div>
+
+        <div class="banner-high-value">
+          <div class="banner-icon">⭐</div>
+          <div>
+            <strong>High-Value Enriched Leads Vault</strong>
+            <p>Isolates profiles with phone numbers or personal portfolio/website URLs so you can follow up via direct call, WhatsApp, or personalized portfolio review.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table" id="high-value-table">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email Address</th>
+                <th>Phone Number</th>
+                <th>Portfolio / Website</th>
+                <th>LinkedIn Profile</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="high-value-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: ALL CONTACTS CRM -->
+      <section class="tab-pane" id="pane-all-leads">
+        <div class="filter-header">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="all-leads-search" placeholder="Search all contacts...">
+          </div>
+          <div class="filter-controls">
+            <select id="filter-status-select" class="dropdown">
+              <option value="all">All Statuses</option>
+              <option value="request_sent">Request Sent</option>
+              <option value="accepted">Accepted</option>
+              <option value="followup1_due">Follow-up 1 Due</option>
+              <option value="followup2_due">Follow-up 2 Due</option>
+              <option value="replied">Replied</option>
+              <option value="not_contacted">Not Contacted</option>
+            </select>
+            <button class="btn btn-outline" id="btn-export-all-csv">
+              📥 Export All CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table" id="all-leads-table">
+            <thead>
+              <tr>
+                <th>Contact</th>
+                <th>Headline & Company</th>
+                <th>Email / Phone</th>
+                <th>Portfolio</th>
+                <th>Status</th>
+                <th>Follow-up Cadence</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="all-leads-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: FOLLOW-UP SEQUENCES & CHAT AUTOMATION -->
+      <section class="tab-pane" id="pane-followups">
+        <div class="cadence-explainer-card">
+          <div class="cadence-step">
+            <span class="step-num">1</span>
+            <div>
+              <strong>Connect / Request Sent</strong>
+              <p>Profile logged with timestamp</p>
+            </div>
+          </div>
+          <div class="cadence-arrow">➔</div>
+          <div class="cadence-step">
+            <span class="step-num">2</span>
+            <div>
+              <strong>Day 1 Follow-up</strong>
+              <p>Warm check-in after 24 hours</p>
+            </div>
+          </div>
+          <div class="cadence-arrow">➔</div>
+          <div class="cadence-step">
+            <span class="step-num">3</span>
+            <div>
+              <strong>Day 2-3 Follow-up</strong>
+              <p>Value bump or simple question</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Follow-up Due Queue -->
+        <div class="dashboard-card" style="margin-top: 20px;">
+          <div class="card-headline">
+            <div>
+              <h3>Follow-up Queue (Ready for Outreach)</h3>
+              <p>Contacts requiring follow-up based on your 1-day or 2-day cadence rules.</p>
+            </div>
+            <span class="status-pill status-pill-warning" id="followups-queue-badge">0 Pending</span>
+          </div>
+
+          <div class="followup-cards-list" id="followup-queue-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: AI PROFILE & CHAT REVIEW STUDIO -->
+      <section class="tab-pane" id="pane-ai-studio">
+        <div class="ai-studio-grid">
+          <!-- Input Form -->
+          <div class="dashboard-card">
+            <h3>Profile Analyzer & Message Crafter</h3>
+            <p style="margin-bottom: 14px; font-size: 13px; color: #64748b;">
+              Generate high-conversion icebreakers, Day 1 & Day 2 follow-ups, and strategic profile breakdowns.
+            </p>
+
+            <div class="form-group">
+              <label>Select Saved Lead</label>
+              <select id="ai-lead-selector" class="dropdown" style="width: 100%;">
+                <option value="">-- Choose from saved leads or enter below --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Contact Full Name</label>
+              <input type="text" id="ai-input-name" placeholder="e.g. Alex Rivera">
+            </div>
+
+            <div class="form-group">
+              <label>Headline & Title</label>
+              <input type="text" id="ai-input-headline" placeholder="e.g. Head of Product @ FinTech Scaleup">
+            </div>
+
+            <div class="form-group">
+              <label>Current Company</label>
+              <input type="text" id="ai-input-company" placeholder="e.g. Acme Innovations">
+            </div>
+
+            <div class="form-group">
+              <label>About / Summary / Context</label>
+              <textarea id="ai-input-about" rows="3" placeholder="Paste their LinkedIn summary, recent achievements, or skills..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Previous Chat / Last Message Context (for Chat-Aware Follow-ups)</label>
+              <textarea id="ai-input-chat" rows="2" placeholder="e.g. Sent connect request yesterday, no reply yet. Or: 'They asked for a deck'"></textarea>
+            </div>
+
+            <div class="form-actions" style="margin-top: 14px;">
+              <button class="btn btn-purple" id="btn-run-ai-review" style="width: 100%;">
+                🧠 Run Complete AI Analysis & Message Generation
+              </button>
+            </div>
+          </div>
+
+          <!-- AI Output Card -->
+          <div class="dashboard-card" id="ai-output-card">
+            <h3>AI Strategic Output</h3>
+            <div id="ai-output-empty" class="empty-state">
+              Fill in the profile details on the left and click "Run Complete AI Analysis" to review profile and generate custom messages.
+            </div>
+
+            <div id="ai-output-content" style="display: none; flex-direction: column; gap: 14px;">
+              <!-- Summary -->
+              <div class="ai-box">
+                <span class="ai-box-title">📋 Executive Profile Assessment</span>
+                <p id="ai-out-summary" style="font-size: 13px; color: #334155; margin-top: 4px;"></p>
+              </div>
+
+              <!-- Icebreaker Note -->
+              <div class="ai-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="ai-box-title">🚀 Connection Request Note (&lt; 300 chars)</span>
+                  <button class="btn btn-xs btn-outline" id="btn-copy-icebreaker">📋 Copy</button>
+                </div>
+                <div class="code-preview" id="ai-out-icebreaker"></div>
+              </div>
+
+              <!-- Day 1 Follow-up -->
+              <div class="ai-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="ai-box-title">⏱️ Day 1 Follow-up Message (24h Cadence)</span>
+                  <button class="btn btn-xs btn-outline" id="btn-copy-day1">📋 Copy</button>
+                </div>
+                <div class="code-preview" id="ai-out-day1"></div>
+              </div>
+
+              <!-- Day 2 Follow-up -->
+              <div class="ai-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="ai-box-title">⏱️ Day 2 Follow-up Message (Value Bump)</span>
+                  <button class="btn btn-xs btn-outline" id="btn-copy-day2">📋 Copy</button>
+                </div>
+                <div class="code-preview" id="ai-out-day2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: SETTINGS & ANTI-BAN -->
+      <section class="tab-pane" id="pane-settings">
+        <div class="settings-grid">
+          <!-- Daily Limits -->
+          <div class="dashboard-card">
+            <h3>Anti-Ban & Safety Limits</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">
+              Configuring conservative caps keeps your LinkedIn account protected from spam filters.
+            </p>
+
+            <div class="form-group">
+              <label>Daily Connection Requests Max Cap</label>
+              <input type="number" id="setting-daily-request-limit" min="5" max="50" value="25">
+              <small style="color: #64748b;">Recommended: 20-25 for standard accounts, up to 35 for Sales Navigator.</small>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label>Daily Messages Max Cap</label>
+              <input type="number" id="setting-daily-msg-limit" min="10" max="100" value="40">
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label>Follow-up 1 Delay (Days)</label>
+              <input type="number" id="setting-followup1-days" min="1" max="7" value="1">
+              <small style="color: #64748b;">Days to wait before scheduling Day 1 follow-up.</small>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label>Follow-up 2 Delay (Days after Follow-up 1)</label>
+              <input type="number" id="setting-followup2-days" min="1" max="14" value="2">
+              <small style="color: #64748b;">Days to wait before scheduling second follow-up.</small>
+            </div>
+
+            <button class="btn btn-primary" id="btn-save-safety-settings" style="margin-top: 16px;">
+              💾 Save Safety Settings
+            </button>
+          </div>
+
+          <!-- AI Configuration -->
+          <div class="dashboard-card">
+            <h3>AI Provider & Model Settings</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">
+              Power your profile analysis and custom follow-up writer with Google Gemini API.
+            </p>
+
+            <div class="form-group">
+              <label>Google Gemini API Key</label>
+              <input type="password" id="setting-gemini-key" placeholder="AIzaSy...">
+              <small style="color: #64748b;">Optional: When empty, LinkPilot utilizes its built-in intelligent heuristic engine.</small>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label>Gemini Model</label>
+              <select id="setting-gemini-model" class="dropdown" style="width: 100%;">
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Ultra-fast & Recommended)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep reasoning)</option>
+              </select>
+            </div>
+
+            <div style="display:flex; gap: 8px; margin-top: 16px;">
+              <button class="btn btn-purple" id="btn-save-ai-settings">
+                💾 Save AI Settings
+              </button>
+              <button class="btn btn-outline" id="btn-test-ai-key">
+                🧪 Test Connection
+              </button>
+            </div>
+            <div id="ai-test-status" style="margin-top: 8px; font-size: 12px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+
+            <h3>Data Management</h3>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button class="btn btn-outline" id="btn-export-backup-json">
+                📦 Backup Data (JSON)
+              </button>
+              <button class="btn btn-outline" id="btn-clear-all-leads" style="color: #ef4444;">
+                🗑️ Clear All Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Manual Add Lead Modal -->
+  <div class="modal-overlay" id="add-lead-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add New Lead to CRM</h3>
+        <button class="modal-close" id="btn-close-lead-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" id="modal-lead-firstname" required placeholder="John">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="modal-lead-lastname" placeholder="Doe">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="modal-lead-email" placeholder="john.doe@company.com">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone Number (High-Value)</label>
+            <input type="text" id="modal-lead-phone" placeholder="+1 (555) 234-5678">
+          </div>
+          <div class="form-group">
+            <label>Portfolio / Website (High-Value)</label>
+            <input type="url" id="modal-lead-portfolio" placeholder="https://github.com/johndoe">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn Profile URL *</label>
+          <input type="url" id="modal-lead-url" required placeholder="https://www.linkedin.com/in/johndoe">
+        </div>
+        <div class="form-group">
+          <label>Headline / Role</label>
+          <input type="text" id="modal-lead-headline" placeholder="VP of Sales / Lead Engineer">
+        </div>
+        <div class="form-group">
+          <label>Current Status</label>
+          <select id="modal-lead-status" class="dropdown" style="width: 100%;">
+            <option value="request_sent">Connection Request Sent</option>
+            <option value="accepted">Accepted</option>
+            <option value="followup1_due">Follow-up 1 Due</option>
+            <option value="replied">Replied</option>
+            <option value="not_contacted">Not Contacted</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-cancel-modal">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-modal-lead">Save Lead to CRM</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/storage.js"></script>
+  <script src="../lib/ai-engine.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
